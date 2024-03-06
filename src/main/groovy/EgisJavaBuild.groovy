@@ -326,7 +326,11 @@ class EgisJavaBuild implements Plugin<Project> {
         }
 
         project.task([type: Jar], 'apiJar', {
-            getArchiveFileName().set ( "${this.project.ext.pkg}-api.jar")
+            String filename = "${this.project.ext.pkg}-api"
+            if(!empty(this.buildNo?.toString())){
+                filename += "-${this.buildNo}"
+            }
+            getArchiveFileName().set ( "${filename}.jar")
             manifest {
                 attributes("Git-Version": this.revision)
             }
@@ -336,8 +340,11 @@ class EgisJavaBuild implements Plugin<Project> {
         })
 
         project.tasks.register( 'srcJar', Jar){
-
-            getArchiveFileName().set  ( "${this.project.ext.pkg}.jar")
+            String filename = this.project.ext.pkg
+            if(!empty(this.buildNo?.toString())){
+                filename += "-${this.buildNo}"
+            }
+            getArchiveFileName().set  ( "${filename}.jar")
             manifest {
                 attributes("Git-Version": this.revision)
             }
